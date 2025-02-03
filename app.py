@@ -17,7 +17,7 @@ if uploaded_file is not None:
 
 movies_dict=pickle.load(open('movie_dict.pkl','rb'))
 movies=pd.DataFrame(movies_dict)
-similarity=pickle.load(open('similarity.pkl','rb'))
+
 st.title('Movie Recommender System')
 
 
