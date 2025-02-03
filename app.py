@@ -2,15 +2,13 @@ import streamlit as st
 import pickle
 import pandas as pd
 import requests
-def fetch_poster(movie_id):
-    response=requests.get('https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US'.format(movie_id))
-    data=response.json()
-    return "https://image.tmdb.org/t/p/w500/"+data['poster_path']
-import requests
-import pickle
 
-import requests
-import pickle
+# Function to fetch movie poster
+def fetch_poster(movie_id):
+    response = requests.get(
+        'https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US'.format(movie_id))
+    data = response.json()
+    return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
 
 # Direct download link to the Google Drive file
 url = 'https://drive.google.com/uc?export=download&id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh'
@@ -34,32 +32,34 @@ except pickle.UnpicklingError as e:
 except Exception as e:
     print("An error occurred:", e)
 
-# Now the similarity_data variable contains the loaded data
+# Load movies data
+movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
+movies = pd.DataFrame(movies_dict)
 
-
-movies_dict=pickle.load(open('movie_dict.pkl','rb'))
-movies=pd.DataFrame(movies_dict)
-
+# Streamlit app setup
 st.title('Movie Recommender System')
 
-
+# Define the recommend function
 def recommend(movie):
     movie_index = movies[movies['title'] == movie].index[0]
     distances = similarity_data[movie_index]
-    movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
-    recommended=[]
-    recommended_posters=[]
-    for i in movies_list:
-        movie_id=movies.iloc[i[0]].id
-        recommended.append((movies.iloc[i[0]].title))
+    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
+    
+    recommended_movies = []
+    recommended_posters = []
+    for i in movie_list:
+        movie_id = movies.iloc[i[0]].id
+        recommended_movies.append(movies.iloc[i[0]].title)
         recommended_posters.append(fetch_poster(movie_id))
-    return recommended,recommended_posters
+    return recommended_movies, recommended_posters
 
-selected_movie = st.selectbox(
-    "Select the movie",movies['title'].values)
+# User selects a movie
+selected_movie = st.selectbox("Select the movie", movies['title'].values)
+
+# Recommend movies
 if st.button("Recommend"):
-    names,posters=recommend(selected_movie)
-    col1, col2, col3,col4,col5 = st.columns(5)
+    names, posters = recommend(selected_movie)
+    col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
         st.text(names[0])
@@ -72,6 +72,7 @@ if st.button("Recommend"):
     with col3:
         st.text(names[2])
         st.image(posters[2])
+
     with col4:
         st.text(names[3])
         st.image(posters[3])
