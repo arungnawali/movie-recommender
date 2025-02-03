@@ -27,8 +27,7 @@ def download_and_decompress(url, filename):
 
 # URLs to the chunk files on GitHub
 chunk_urls = [
-    'https://github.com/movie-recommender/similarity_part_0.pkl.gz',
-    'https://github.com/movie-recommender/similarity_part_1.pkl.gz'
+ ' https://github.com/arungnawali/movie-recommender/blob/master/similarity_part_0.pkl.gz','https://github.com/arungnawali/movie-recommender/blob/master/similarity_part_0.pkl.gz'
 ]
 
 # Download, decompress, and combine the chunks
