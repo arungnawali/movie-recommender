@@ -29,14 +29,18 @@ try:
     print("File loaded successfully!")
 except pickle.UnpicklingError as e:
     similarity_data = None
-    print("Error unpickling file:", e)
+    st.error("Error unpickling file: " + str(e))
 except Exception as e:
     similarity_data = None
-    print("An error occurred:", e)
+    st.error("An error occurred: " + str(e))
 
 # Load movies data
-movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
-movies = pd.DataFrame(movies_dict)
+try:
+    movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
+    movies = pd.DataFrame(movies_dict)
+except Exception as e:
+    st.error("Error loading movie_dict.pkl: " + str(e))
+    movies = pd.DataFrame()
 
 # Streamlit app setup
 st.title('Movie Recommender System')
