@@ -13,8 +13,9 @@ def fetch_poster(movie_id):
 # Direct download link to the Google Drive file
 url = 'https://drive.google.com/uc?export=download&id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh'
 
-# Request the file
-response = requests.get(url, stream=True)
+# Request the file with session to handle redirects
+session = requests.Session()
+response = session.get(url, stream=True)
 response.raise_for_status()  # Ensure we notice bad responses
 
 # Save the file to disk
