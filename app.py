@@ -2,6 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import requests
+import gzip
 
 # Function to fetch movie poster
 def fetch_poster(movie_id):
@@ -10,22 +11,9 @@ def fetch_poster(movie_id):
     data = response.json()
     return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
 
-# Direct download link to the Google Drive file
-url = 'https://drive.google.com/uc?export=download&id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh'
-
-# Request the file with session to handle redirects
-session = requests.Session()
-response = session.get(url, stream=True)
-response.raise_for_status()  # Ensure we notice bad responses
-
-# Save the file to disk
-with open('similarity.pkl', 'wb') as f:
-    for chunk in response.iter_content(chunk_size=8192):
-        f.write(chunk)
-
-# Load the file with error handling
+# Load the compressed file and decompress it
 try:
-    with open('similarity.pkl', 'rb') as f:
+    with gzip.open('similarity.pkl.gz', 'rb') as f:
         similarity_data = pickle.load(f)
     print("File loaded successfully!")
 except pickle.UnpicklingError as e:
