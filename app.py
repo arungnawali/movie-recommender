@@ -4,7 +4,7 @@ import pickle
 import streamlit as st
 import requests
 from urllib.request import urlopen
-similarityURL ="https://drive.usercontent.google.com/download?id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh&export=download&authuser=0"
+similarityURL = "https://drive.google.com/u/1/uc?id=1NB6qrgPhZgr7yL1PLW2AmI_kjj-Z0X1U&export=download&confirm=t&uuid=ab29cdc5-00a8-447b-98c1-d0d838679ca6&at=AKKF8vzErattqXmO2Zu4NtnWH2rj:1687363427387"
 similarityRES = urlopen(similarityURL)
 similarity = pickle.load(similarityRES)
 def fetch_poster(movie_id):
