@@ -3,7 +3,7 @@
 import pickle
 import streamlit as st
 import requests
-from urllib import urlopen
+from urllib.request import urlopen
 similarityURL ="https://drive.usercontent.google.com/download?id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh&export=download&authuser=0"
 similarityRES = urlopen(similarityURL)
 similarity = pickle.load(similarityRES)
