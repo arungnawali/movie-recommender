@@ -7,7 +7,27 @@ def fetch_poster(movie_id):
     data=response.json()
     return "https://image.tmdb.org/t/p/w500/"+data['poster_path']
 
-similarity=movies_dict=pickle.load(open('similarity.pkl','rb'))
+import requests
+import pickle
+
+# Direct link to the Google Drive file
+url = 'https://drive.google.com/uc?export=download&id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh'
+
+# Request the file
+response = requests.get(url, stream=True)
+response.raise_for_status()  # Ensure we notice bad responses
+
+# Save the file to disk
+with open('similarity.pkl', 'wb') as f:
+    for chunk in response.iter_content(chunk_size=8192):
+        f.write(chunk)
+
+# Load the file
+with open('similarity.pkl', 'rb') as f:
+    similarity = pickle.load(f)
+
+# Now the similarity_data variable contains the loaded data
+
 
 movies_dict=pickle.load(open('movie_dict.pkl','rb'))
 movies=pd.DataFrame(movies_dict)
