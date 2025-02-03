@@ -11,54 +11,22 @@ def fetch_poster(movie_id):
     data = response.json()
     return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
 
-# Helper function to download and decompress chunk files
-def download_and_decompress(url, filename):
-    response = requests.get(url, stream=True)
-    response.raise_for_status()  # Ensure we notice bad responses
-
-    # Save the file to disk
-    with open(filename, 'wb') as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
-
-    # Decompress the file
-    with gzip.open(filename, 'rb') as f_in:
-        return pickle.load(f_in)
-
-# URLs to the chunk files on GitHub
-chunk_urls = [
- ' https://github.com/arungnawali/movie-recommender/blob/master/similarity_part_0.pkl.gz','https://github.com/arungnawali/movie-recommender/blob/master/similarity_part_0.pkl.gz'
-]
-
-# Download, decompress, and combine the chunks
-similarity_data = []
-for idx, url in enumerate(chunk_urls):
-    filename = f'similarity_part_{idx}.pkl.gz'
-    chunk = download_and_decompress(url, filename)
-    similarity_data.extend(chunk)
-
 # Load movies data
-try:
-    movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
-    movies = pd.DataFrame(movies_dict)
-except Exception as e:
-    st.error("Error loading movie_dict.pkl: " + str(e))
-    movies = pd.DataFrame()
+
+movies_dict =pickle.load(open('movie_dict.pkl', 'rb'))
+movies = pd.DataFrame(movies_dict)
+
 
 # Streamlit app setup
 st.title('Movie Recommender System')
 
 # Define the recommend function
 def recommend(movie):
-    if not similarity_data:
-        st.error("Error: similarity_data is not loaded correctly.")
-        return [], []
 
-    try:
-        movie_index = movies[movies['title'] == movie].index[0]
-    except IndexError:
-        st.error("Error: Movie not found.")
-        return [], []
+   
+
+    
+        movie_index = movies[movies['title'] == 
 
     distances = similarity_data[movie_index]
     movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
