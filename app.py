@@ -11,17 +11,32 @@ def fetch_poster(movie_id):
     data = response.json()
     return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
 
-# Load the compressed file and decompress it
-try:
-    with gzip.open('similarity.pkl.gz', 'rb') as f:
-        similarity_data = pickle.load(f)
-    print("File loaded successfully!")
-except pickle.UnpicklingError as e:
-    similarity_data = None
-    st.error("Error unpickling file: " + str(e))
-except Exception as e:
-    similarity_data = None
-    st.error("An error occurred: " + str(e))
+# Helper function to download and decompress chunk files
+def download_and_decompress(url, filename):
+    response = requests.get(url, stream=True)
+    response.raise_for_status()  # Ensure we notice bad responses
+
+    # Save the file to disk
+    with open(filename, 'wb') as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+
+    # Decompress the file
+    with gzip.open(filename, 'rb') as f_in:
+        return pickle.load(f_in)
+
+# URLs to the chunk files on GitHub
+chunk_urls = [
+    'https://github.com/your-repo/similarity_part_0.pkl.gz',
+    'https://github.com/your-repo/similarity_part_1.pkl.gz'
+]
+
+# Download, decompress, and combine the chunks
+similarity_data = []
+for idx, url in enumerate(chunk_urls):
+    filename = f'similarity_part_{idx}.pkl.gz'
+    chunk = download_and_decompress(url, filename)
+    similarity_data.extend(chunk)
 
 # Load movies data
 try:
@@ -36,10 +51,10 @@ st.title('Movie Recommender System')
 
 # Define the recommend function
 def recommend(movie):
-    if similarity_data is None:
+    if not similarity_data:
         st.error("Error: similarity_data is not loaded correctly.")
         return [], []
-    
+
     try:
         movie_index = movies[movies['title'] == movie].index[0]
     except IndexError:
@@ -48,7 +63,7 @@ def recommend(movie):
 
     distances = similarity_data[movie_index]
     movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
-    
+
     recommended_movies = []
     recommended_posters = []
     for i in movie_list:
