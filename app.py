@@ -9,7 +9,10 @@ def fetch_poster(movie_id):
 import requests
 import pickle
 
-# Direct link to the Google Drive file
+import requests
+import pickle
+
+# Direct download link to the Google Drive file
 url = 'https://drive.google.com/uc?export=download&id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh'
 
 # Request the file
@@ -21,9 +24,15 @@ with open('similarity.pkl', 'wb') as f:
     for chunk in response.iter_content(chunk_size=8192):
         f.write(chunk)
 
-# Load the file
-with open('similarity.pkl', 'rb') as f:
-    similarity_data = pickle.load(f)
+# Load the file with error handling
+try:
+    with open('similarity.pkl', 'rb') as f:
+        similarity_data = pickle.load(f)
+    print("File loaded successfully!")
+except pickle.UnpicklingError as e:
+    print("Error unpickling file:", e)
+except Exception as e:
+    print("An error occurred:", e)
 
 # Now the similarity_data variable contains the loaded data
 
