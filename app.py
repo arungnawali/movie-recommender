@@ -28,8 +28,10 @@ try:
         similarity_data = pickle.load(f)
     print("File loaded successfully!")
 except pickle.UnpicklingError as e:
+    similarity_data = None
     print("Error unpickling file:", e)
 except Exception as e:
+    similarity_data = None
     print("An error occurred:", e)
 
 # Load movies data
@@ -41,6 +43,10 @@ st.title('Movie Recommender System')
 
 # Define the recommend function
 def recommend(movie):
+    if similarity_data is None:
+        st.error("Error: similarity_data is not loaded correctly.")
+        return [], []
+    
     movie_index = movies[movies['title'] == movie].index[0]
     distances = similarity_data[movie_index]
     movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
@@ -80,4 +86,3 @@ if st.button("Recommend"):
     with col5:
         st.text(names[4])
         st.image(posters[4])
-
