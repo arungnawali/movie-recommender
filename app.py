@@ -6,9 +6,6 @@ def fetch_poster(movie_id):
     response=requests.get('https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US'.format(movie_id))
     data=response.json()
     return "https://image.tmdb.org/t/p/w500/"+data['poster_path']
-
-import requests
-import pickle
 import requests
 import pickle
 
@@ -19,22 +16,14 @@ url = 'https://drive.google.com/uc?export=download&id=1LxuSIP7Z35d1pEu5wAjuei4GA
 response = requests.get(url, stream=True)
 response.raise_for_status()  # Ensure we notice bad responses
 
-# Save the file to disk and check its size
+# Save the file to disk
 with open('similarity.pkl', 'wb') as f:
     for chunk in response.iter_content(chunk_size=8192):
         f.write(chunk)
 
-# Load the file with error handling
-try:
-    with open('similarity.pkl', 'rb') as f:
-        similarity = pickle.load(f)
-    print("File loaded successfully!")
-except pickle.UnpicklingError as e:
-    print("Error unpickling file:", e)
-except Exception as e:
-    print("An error occurred:", e)
-
-# Now the similarity_data variable contains the loaded data
+# Load the file
+with open('similarity.pkl', 'rb') as f:
+    similarity_data = pickle.load(f)
 
 # Now the similarity_data variable contains the loaded data
 
@@ -47,7 +36,7 @@ st.title('Movie Recommender System')
 
 def recommend(movie):
     movie_index = movies[movies['title'] == movie].index[0]
-    distances = similarity[movie_index]
+    distances = similarity_data[movie_index]
     movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
     recommended=[]
     recommended_posters=[]
