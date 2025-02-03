@@ -3,7 +3,10 @@
 import pickle
 import streamlit as st
 import requests
-
+from urllib import urlopen
+similarityURL ="https://drive.usercontent.google.com/download?id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh&export=download&authuser=0"
+similarityRES = urlopen(similarityURL)
+similarity = pickle.load(similarityRES)
 def fetch_poster(movie_id):
     url = "https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US".format(movie_id)
     data = requests.get(url)
