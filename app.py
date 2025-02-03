@@ -6,7 +6,7 @@ import requests
 from urllib.request import urlopen
 similarityURL = "https://drive.google.com/uc?export=download&id=1LxuSIP7Z35d1pEu5wAjuei4GARB7YKJh"
 similarityRES = urlopen(similarityURL)
-similarity = pickle.load(similarityRES)
+similarity = pickle.load(open(similarityRES,'rb'))
 def fetch_poster(movie_id):
     url = "https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US".format(movie_id)
     data = requests.get(url)
