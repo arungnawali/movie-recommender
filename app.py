@@ -5,8 +5,10 @@ import streamlit as st
 import requests
 import numpy as np
 import pandas as pd
+from urllib.request import urlopen
 movies=pd.read_csv('tmdb_5000_movies.csv',on_bad_lines='skip', engine='python')
-credits=pd.read_csv('tmdb_5000_credits.csv.zip',on_bad_lines='skip', engine='python')
+crediturl=urlopen('https://drive.google.com/uc?export=download&id=1wrawnTW5jH0ldDk4_ttaJaG2o3bdkye2')
+credits=pd.read_csv(crediturl,on_bad_lines='skip', engine='python')
 movies=pd.merge(movies,credits,on='title')
 movies.head(1)
 
