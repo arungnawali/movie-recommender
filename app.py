@@ -12,27 +12,7 @@ credits=pd.read_csv(crediturl,on_bad_lines='skip', engine='python')
 movies=pd.merge(movies,credits,on='title')
 movies.head(1)
 
-print("numpy")
 
-import pandas as pd
-import numpy as np
-import sklearn
-import ast
-import nltk
-
-print("numpy",np.__version__)
-print("pandas",pd.__version__)
-print("sklearn",sklearn.__version__)
-print("nltk",nltk.__version__)
-print("ast",ast.__version__)
-
-#genres
-#id
-#keywords
-#original_title
-#overview
-#cast
-#crew
 
 #extracting required columns
 movies=movies[['genres','id','keywords','title','overview','cast','crew']]
