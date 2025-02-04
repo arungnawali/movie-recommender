@@ -114,10 +114,6 @@ def recommend(movie):
 
 recommend("Avatar")
 
-import pickle
-
-pickle.dump(new_df.to_dict(),open('movie_dict.pkl','wb'))
-
 
 
 def recommend(movie):
@@ -135,7 +131,7 @@ def recommend(movie):
 
 
 st.header('Movie Recommender System')
-movies = pickle.load(open('movie_list.pkl','rb'))
+movies = new_df
 
 movie_list = movies['title'].values
 selected_movie = st.selectbox(
