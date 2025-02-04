@@ -79,7 +79,7 @@ new_df['tags']=new_df['tags'].apply(lambda x:" ".join(x))
 
 new_df['tags']=new_df['tags'].apply(lambda x:x.lower())
 
-import nltk
+
 from nltk.stem.porter import PorterStemmer
 ps=PorterStemmer()
 
